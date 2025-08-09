@@ -11,8 +11,8 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <form class="mx-auto row g-2" role="search" style="max-width: 600px; width: 100%;">
           <div class="col-12 col-md-auto" style="flex: 0 0 auto; width: 200px;">
-            <select class="form-select w-100" v-if="!productCategoryStore.loading">
-              <option selected>All Categories</option>
+            <select class="form-select w-100" v-if="!productCategoryStore.loading" v-model="productStore.productCategoryId">
+              <option :value="null" selected>All Categories</option>
               <option v-for="product_category in productCategoryStore.productCategories" :key="product_category.id" :value="product_category.id">
                 {{ product_category.name }}
               </option>
@@ -21,7 +21,7 @@
           </div>
           <div class="col-12 col-md">
             <div class="search-wrapper position-relative">
-              <input class="form-control pe-5" type="search" placeholder="Search for more than 20,000 products" aria-label="Search">
+              <input v-model="productStore.searchName" class="form-control pe-5" type="search" placeholder="Search for more than 20,000 products" aria-label="Search"/>
               <i class="bi bi-search position-absolute" style="right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none;"></i>
             </div>
           </div>
@@ -58,14 +58,16 @@
 </template>
 
 <script setup>
-  import { onMounted, computed } from 'vue'
+  import { onMounted, computed, watch } from 'vue'
   import { useAuthStore } from '@/stores/authStore'
   import { useProductCategoryStore } from '@/stores/productCategoryStore'
+  import { useProductStore } from '@/stores/productStore'
   import { useCartStore } from '@/stores/cartStore'
   import { useRouter } from 'vue-router'
   import { formatRupiah } from '@/utils/currency'
 
   const productCategoryStore = useProductCategoryStore()
+  const productStore         = useProductStore()
   const authStore            = useAuthStore()
   const router               = useRouter()
   const cartStore            = useCartStore()
@@ -73,11 +75,24 @@
   const userObj = authStore.user ? JSON.parse(authStore.user) : null
 
   onMounted(() => {
-    cartStore.fetchCart()
+    if (authStore.isAuthenticated) {
+      cartStore.fetchCart()
+    }
+
     productCategoryStore.fetchProductCategories()
   })
 
-  const totalPrice = computed(() => {
-    return cartStore.cart.total_price
-  })
+  if (authStore.isAuthenticated) {
+    const totalPrice = computed(() => {
+      return cartStore.cart.total_price
+    })
+  }
+
+  watch(
+    () => [productStore.searchName, productStore.productCategoryId],
+    () => {
+      productStore.fetchProducts()
+    },
+    { immediate: false }
+  )
 </script>

@@ -8,14 +8,35 @@ import { formatRupiah } from '@/utils/currency'
 export const useProductStore = defineStore('products', {
   state: () => ({
     products: [],
-    loading: false
+    loading: false,
+    searchName: '',
+    productCategoryId: null
   }),
+  getters: {
+    filteredProducts: (state) => {
+      return state.products.filter(product => {
+        const matchesName     = product.name.toLowerCase().includes(state.searchName.toLowerCase())
+        const matchesCategory = !state.productCategoryId || product.product_category_id === state.productCategoryId
+        return matchesName && matchesCategory
+      })
+    }
+  },
 
   actions: {
     async fetchProducts() {
       this.loading = true
       try {
-        const response = await api.get('/products')
+        const params = {}
+
+        if (this.searchName && this.searchName.trim() !== '') {
+          params.name = this.searchName.trim()
+        }
+
+        if (this.productCategoryId) {
+          params.product_category_id = this.productCategoryId
+        }
+
+        const response = await api.get('/products', { params })
 
         this.products = response.data.products.map(product => ({
           ...product,

@@ -42,8 +42,6 @@ export const useAuthStore = defineStore('auth', {
         this.token = token
         this.user  = user
         api.defaults.headers.common['Authorization'] = `Bearer ${token}`
-      } else {
-        this.logout()
       }
     },
 
