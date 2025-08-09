@@ -38,6 +38,7 @@ export const useProductStore = defineStore('products', {
 
     decrementQty(productId) {
       const product = this.products.find(p => p.id === productId)
+
       if (product && product.qty > 1) {
         product.qty--
       }
@@ -46,9 +47,35 @@ export const useProductStore = defineStore('products', {
     setQty(productId, value) {
       const product = this.products.find(p => p.id === productId)
       if (product) {
-        const qty = parseInt(value, 10)
+        const qty   = parseInt(value, 10)
         product.qty = isNaN(qty) || qty < 1 ? 1 : qty
       }
+    },
+
+    addToCart(productId) {
+      const product = this.products.find(p => p.id === productId)
+
+      if (!product) {
+        showToast('Barang tidak ada!', 'danger')
+        return
+      }
+
+      if (product.qty > product.stock) {
+        showToast(`Stok ${product.name} tidak cukup`, 'warning')
+        return
+      }
+
+      // Kirim ke backend
+      api.post('/user/add_to_cart', {
+        product_id: product.id
+      })
+        .then((response) => {
+          console.log(response)
+          showToast(`${product.name} berhasil ditambahkan`, 'success')
+        })
+        .catch(err => {
+          showToast(err.response.data.message, 'danger')
+        })
     }
   }
 })

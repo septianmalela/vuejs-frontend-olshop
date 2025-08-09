@@ -68,7 +68,7 @@
               <button class="btn btn-sm btn-outline-secondary" @click="productStore.decrementQty(product.id)">-</button>
               <input type="number" class="form-control form-control-sm mx-1 text-center" style="width: 50px;" v-model.number="product.qty" @input="productStore.setQty(product.id, product.qty)" readonly>
               <button class="btn btn-sm btn-outline-secondary" @click="productStore.incrementQty(product.id)">+</button>
-              <span>Add to Cart</span>
+              <span style="cursor: pointer;" @click="productStore.addToCart(product.id)">Add to Cart</span>
             </div>
           </div>
         </div>
