@@ -1,6 +1,9 @@
+import { computed } from 'vue'
 import { defineStore } from 'pinia'
 import api from '../lib/axios'
 import { showToast } from '../utils/toast'
+import { useCartStore } from '@/stores/cartStore'
+import { formatRupiah } from '@/utils/currency'
 
 export const useProductStore = defineStore('products', {
   state: () => ({
@@ -67,10 +70,15 @@ export const useProductStore = defineStore('products', {
 
       // Kirim ke backend
       api.post('/user/add_to_cart', {
-        product_id: product.id
+        product_id: product.id,
+        qty: product.qty
       })
         .then((response) => {
-          console.log(response)
+          const cartStore = useCartStore()
+          cartStore.fetchCart()
+          const totalPrice = computed(() => {
+            return cartStore.cart.total_price
+          })
           showToast(`${product.name} berhasil ditambahkan`, 'success')
         })
         .catch(err => {

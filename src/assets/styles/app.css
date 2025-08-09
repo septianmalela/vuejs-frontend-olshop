@@ -97,3 +97,7 @@
 .btn-sm {
   font-size: 0.75rem;
 }
+
+.dropdown-toggle::after {
+  display: none;
+}

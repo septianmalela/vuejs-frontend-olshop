@@ -35,13 +35,13 @@
 
 <script setup>
   import imageNotFound from '@/assets/image-not-found.png'
-  import { onMounted } from 'vue'
+  import { onMounted, computed } from 'vue'
   import { useProductStore } from '@/stores/productStore'
   import { formatRupiah } from '@/utils/currency'
   import { useProductCategoryStore } from '@/stores/productCategoryStore'
-  const productCategoryStore = useProductCategoryStore()
 
-  const productStore = useProductStore()
+  const productCategoryStore = useProductCategoryStore()
+  const productStore         = useProductStore()
 
   onMounted(() => {
     productCategoryStore.fetchProductCategories()

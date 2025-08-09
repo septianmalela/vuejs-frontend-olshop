@@ -28,9 +28,16 @@
         </form>
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="bi bi-person-fill mx-2"></i>
-              Hi, Selamat Datang!
+            <a class="nav-link dropdown-toggle d-flex flex-column align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="min-width: 120px;">
+              <div class="d-flex align-items-center">
+                <i class="bi bi-person-fill mx-2"></i>
+                <span>
+                  {{ authStore.isAuthenticated ? `Hi, ${userObj.name}` : 'Hi, Selamat Datang!' }}
+                </span>
+              </div>
+              <small>
+                {{ authStore.isAuthenticated ? formatRupiah(totalPrice) : '' }}
+              </small>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
               <li v-if="!authStore.isAuthenticated">
@@ -51,17 +58,26 @@
 </template>
 
 <script setup>
-  import { onMounted } from 'vue'
+  import { onMounted, computed } from 'vue'
   import { useAuthStore } from '@/stores/authStore'
   import { useProductCategoryStore } from '@/stores/productCategoryStore'
+  import { useCartStore } from '@/stores/cartStore'
   import { useRouter } from 'vue-router'
+  import { formatRupiah } from '@/utils/currency'
 
   const productCategoryStore = useProductCategoryStore()
   const authStore            = useAuthStore()
   const router               = useRouter()
+  const cartStore            = useCartStore()
+
+  const userObj = authStore.user ? JSON.parse(authStore.user) : null
 
   onMounted(() => {
-    console.log(authStore.user)
+    cartStore.fetchCart()
     productCategoryStore.fetchProductCategories()
+  })
+
+  const totalPrice = computed(() => {
+    return cartStore.cart.total_price
   })
 </script>
