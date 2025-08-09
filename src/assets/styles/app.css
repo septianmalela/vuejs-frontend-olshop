@@ -1,0 +1,99 @@
+.search-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.search-wrapper .bi-search {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #aaa;
+  cursor: pointer;
+}
+
+.search-wrapper input {
+  padding-right: 35px;
+}
+
+.search-wrapper input:focus + .bi-search,
+.search-wrapper .bi-search:hover {
+  color: #198754;
+}
+
+.card-scroll-wrapper {
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.card-scroll-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.card-scroll {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.5rem;
+}
+
+.card {
+  flex: 0 0 auto;
+  width: 150px;
+  border: 1px solid #ddd;
+  border-radius: 0.5rem;
+}
+
+.card-img-top {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  margin: 0.75rem auto 0;
+  display: block;
+}
+
+.card-body {
+  padding: 0.5rem;
+}
+
+.card-title {
+  margin: 0;
+  font-size: 0.9rem;
+  word-break: break-word;
+}
+
+@media (max-width: 756px) {
+  .card {
+    width: 120px;
+  }
+
+  .card-img-top {
+    width: 60px;
+    height: 60px;
+  }
+
+  .card-title {
+    font-size: 0.8rem;
+  }
+}
+
+.custom-card {
+  max-width: 100%;
+}
+
+.custom-card-img {
+  width: 100%;
+  height: 150px;
+  padding: 5px;
+  object-fit: cover;
+  border-radius: 15px;
+}
+
+.qty-input {
+  padding: 0.25rem;
+  font-size: 0.8rem;
+}
+
+.btn-sm {
+  font-size: 0.75rem;
+}
