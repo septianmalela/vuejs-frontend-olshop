@@ -36,6 +36,8 @@ export const useProductStore = defineStore('products', {
           params.product_category_id = this.productCategoryId
         }
 
+        console.log(params)
+
         const response = await api.get('/products', { params })
 
         this.products = response.data.products.map(product => ({

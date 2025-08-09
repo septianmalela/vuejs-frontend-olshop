@@ -2,7 +2,7 @@
   <div class="container">
     <footer class="py-5">
       <div class="row">
-        <div class="col-6 col-md-2 mb-3">
+        <div class="col-12 col-md-2 mb-3">
           <img src="@/assets/tks.png" alt="img" class="img-thumbnail">
           <div class="d-flex justify-content-center align-items-center pt-3">
             <div class="rounded bg-light mx-2">
@@ -22,7 +22,7 @@
             </div>
           </div>
         </div>
-        <div class="col-6 col-md-3 mb-3">
+        <div class="col-12 col-md-3 mb-3">
           <h5>Ultras</h5>
           <ul class="nav flex-column">
             <li class="nav-item mb-2">
@@ -45,7 +45,7 @@
             </li>
           </ul>
         </div>
-          <div class="col-6 col-md-3 mb-3">
+          <div class="col-12 col-md-3 mb-3">
             <h5>Customer Service</h5>
             <ul class="nav flex-column">
               <li class="nav-item mb-2">

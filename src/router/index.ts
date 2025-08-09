@@ -54,9 +54,9 @@ router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
 
   const publicPages = ['/login', '/register']
-  const authRequired = publicPages.includes(to.path)
-  
-  if (authRequired && authStore.isAuthenticated) {
+  const authRequired = to.meta.requiresAuth
+
+  if (publicPages.includes(to.path) && authStore.isAuthenticated) {
     showToast('Anda sudah login, tidak dapat akses page tersebut!', 'danger')
     return next('/')
   }

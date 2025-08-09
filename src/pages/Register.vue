@@ -1,5 +1,8 @@
 <template>
   <div class="container mt-5">
+    <div class="text-center">
+      <img src="@/assets/tks.png" alt="Bootstrap" width="200" height="200">
+    </div>
     <h2 class="mb-4">Register</h2>
     <form @submit.prevent="handleRegister">
       <div class="mb-3">
@@ -17,9 +20,12 @@
         <input type="password" v-model="password" class="form-control" required />
       </div>
 
-      <button type="submit" class="btn btn-success w-100" :disabled="registerStore.loading">
-        {{ registerStore.loading ? 'Loading...' : 'Register' }}
-      </button>
+      <div class="d-flex">
+        <button type="submit" class="btn btn-success me-3" :disabled="registerStore.loading">
+          {{ registerStore.loading ? 'Loading...' : 'Register' }}
+        </button>
+        <router-link to="/login" class="btn btn-primary">Login</router-link>
+      </div>
     </form>
   </div>
 </template>
