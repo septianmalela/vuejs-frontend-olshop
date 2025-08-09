@@ -17,12 +17,26 @@
 
 <script setup>
   import { ref } from 'vue'
+  import { useLoginStore } from '@/stores/loginStore'
+  import { showToast } from '../utils/toast'
+
+  const loginStore = useLoginStore()
 
   const email    = ref('')
   const password = ref('')
 
   function handleLogin() {
-    console.log("Login dengan", email.value, password.value)
-    // nanti kita ganti dengan API call
+    const payload = {
+      email: email.value,
+      password: password.value
+    }
+
+    loginStore.login(payload)
+      .then(res => {
+        showToast('Login berhasil!')
+      })
+      .catch(err => {
+        console.error(err)
+      })
   }
 </script>

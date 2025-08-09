@@ -1,27 +1,29 @@
 import { defineStore } from 'pinia'
 import api from '@/lib/axios'
-import { showToast } from '../utils/toast'
 import { useAuthStore } from './authStore'
+import { showToast } from '../utils/toast'
 
-export const useRegisterStore = defineStore('register', {
+export const useLoginStore = defineStore('login', {
   state: () => ({
-    loading: false
+    loading: false,
+    error: null,
   }),
 
   actions: {
-    async register(payload) {
+    async login(payload) {
       this.loading    = true
       this.error      = null
       const authStore = useAuthStore()
 
       try {
-        const response                = await api.post('/register', payload)
+        const response                = await api.post('/login', payload)
         const { user, authorisation } = response.data
 
         await authStore.setUserAndToken(user, authorisation)
 
+        return response.data
       } catch (err) {
-        const errorMsg = err.response?.data?.message || err.message || 'Register failed'
+        const errorMsg = err.response?.data?.message || err.message || 'Login failed'
         this.error     = errorMsg
         showToast(errorMsg, 'danger')
         throw this.error

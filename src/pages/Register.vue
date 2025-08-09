@@ -25,28 +25,29 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRegisterStore } from '@/stores/registerStore'
+  import { ref } from 'vue'
+  import { useRegisterStore } from '@/stores/registerStore'
+  import { showToast } from '../utils/toast'
 
-const registerStore = useRegisterStore()
+  const registerStore = useRegisterStore()
 
-const name     = ref('')
-const email    = ref('')
-const password = ref('')
+  const name     = ref('')
+  const email    = ref('')
+  const password = ref('')
 
-function handleRegister() {
-  const payload = {
-    name: name.value,
-    email: email.value,
-    password: password.value
+  function handleRegister() {
+    const payload = {
+      name: name.value,
+      email: email.value,
+      password: password.value
+    }
+
+    registerStore.register(payload)
+      .then(res => {
+        showToast('Register berhasil!')
+      })
+      .catch(err => {
+        console.error(err)
+      })
   }
-
-  registerStore.register(payload)
-    .then(res => {
-      alert('Register berhasil! Silakan login.')
-    })
-    .catch(err => {
-      console.error(err)
-    })
-}
 </script>
