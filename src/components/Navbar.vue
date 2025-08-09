@@ -33,11 +33,14 @@
               Hi, Selamat Datang!
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
-              <li>
+              <li v-if="!authStore.isAuthenticated">
                 <router-link to="/login" class="dropdown-item">Login</router-link>
               </li>
-              <li>
+              <li v-if="!authStore.isAuthenticated">
                 <router-link to="/register" class="dropdown-item">Register</router-link>
+              </li>
+              <li v-if="authStore.isAuthenticated">
+                <a href="javascript:;" class="dropdown-item" @click.prevent="authStore.logout()">Logout</a>
               </li>
             </ul>
           </li>
@@ -49,11 +52,16 @@
 
 <script setup>
   import { onMounted } from 'vue'
-
+  import { useAuthStore } from '@/stores/authStore'
   import { useProductCategoryStore } from '@/stores/productCategoryStore'
+  import { useRouter } from 'vue-router'
+
   const productCategoryStore = useProductCategoryStore()
+  const authStore            = useAuthStore()
+  const router               = useRouter()
 
   onMounted(() => {
+    console.log(authStore.user)
     productCategoryStore.fetchProductCategories()
   })
 </script>
