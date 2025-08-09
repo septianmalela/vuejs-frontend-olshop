@@ -30,6 +30,9 @@
           <li v-if="authStore.isAuthenticated" class="nav-item">
             <a href="javascript:;" class="nav-link" @click.prevent="authStore.logout()">Logout</a>
           </li>
+          <li v-if="authStore.isAuthenticated" class="nav-item">
+            <router-link to="/orders" class="nav-link">Orders</router-link>
+          </li>
           <li v-if="!authStore.isAuthenticated" class="nav-item dropdown">
             <a class="nav-link dropdown-toggle d-flex flex-column align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="min-width: 120px;">
               <div class="d-flex align-items-center">

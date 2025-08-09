@@ -7,6 +7,7 @@ import AuthLayout from '@/layouts/AuthLayout.vue'
 import Home from '@/pages/Home.vue'
 import Login from '@/pages/Login.vue'
 import Register from '@/pages/Register.vue'
+import Order from '@/pages/Order.vue'
 
 const routes = [
   {
@@ -18,6 +19,12 @@ const routes = [
         name: 'Home',
         component: Home
       },
+      {
+        path: '/orders',
+        name: 'Order',
+        component: Order,
+        meta: { requiresAuth: true }
+      }
     ]
   },
   {
@@ -52,6 +59,11 @@ router.beforeEach((to, from, next) => {
   if (authRequired && authStore.isAuthenticated) {
     showToast('Anda sudah login, tidak dapat akses page tersebut!', 'danger')
     return next('/')
+  }
+
+  if (authRequired && !authStore.isAuthenticated) {
+    showToast('Anda harus login dulu untuk mengakses halaman ini.', 'warning')
+    return next('/login')
   }
 
   next()
