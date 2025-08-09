@@ -2,7 +2,7 @@
   <div class="container mt-4">
     <h3>My Orders</h3>
 
-    <div v-if="orderStore.loading">Loading orders...</div>
+    <div v-if="orderStore.loading">Loading...</div>
     <div v-if="orderStore.error" class="text-danger">{{ orderStore.error }}</div>
 
     <table v-if="!orderStore.loading && orderStore.orders.length" class="table table-striped mt-3">
@@ -39,30 +39,33 @@
         <div class="modal-body">
           <p><strong>Date:</strong> {{ formatDate(selectedOrder.created_at) }}</p>
           <p><strong>Total Price:</strong> {{ formatRupiah(selectedOrder.total_price) }}</p>
+          <p><strong>status:</strong> {{ selectedOrder.status }}</p>
 
           <h6>Items:</h6>
-          <table class="table table-sm">
-            <thead>
-              <tr>
-                <th>Product</th>
-                <th>Qty</th>
-                <th>Price</th>
-                <th>Subtotal</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="item in selectedOrder.order_items" :key="item.id">
-                <td>{{ item.name }}</td>
-                <td>{{ item.qty }}</td>
-                <td>{{ formatRupiah(item.price) }}</td>
-                <td>{{ formatRupiah(item.qty * item.price) }}</td>
-              </tr>
-              <tr class="fw-bold">
-                <td colspan="3" class="text-end">Total:</td>
-                <td>{{ formatRupiah(selectedOrder.total_price) }}</td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="table-responsive">
+            <table class="table table-sm">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Qty</th>
+                  <th>Price</th>
+                  <th>Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in selectedOrder.order_items" :key="item.id">
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.qty }}</td>
+                  <td>{{ formatRupiah(item.price) }}</td>
+                  <td>{{ formatRupiah(item.qty * item.price) }}</td>
+                </tr>
+                <tr class="fw-bold">
+                  <td colspan="3" class="text-end">Total:</td>
+                  <td>{{ formatRupiah(selectedOrder.total_price) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
         <div class="modal-footer">
           <button class="btn btn-secondary" @click="closeModal">Close</button>
