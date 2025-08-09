@@ -105,6 +105,6 @@
 
 <script>
   export default {
-    name: "FooterComponent"
+    name: "Footer"
   }
 </script>
