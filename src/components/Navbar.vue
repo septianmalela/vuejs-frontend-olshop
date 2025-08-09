@@ -83,7 +83,9 @@
           <span>Total:</span>
           <span>{{ formatRupiah(totalPrice) }}</span>
         </div>
-        <button class="btn btn-warning w-100 mt-4">Continue to checkout</button>
+        <button class="btn btn-warning w-100 mt-4" @click="handleCheckout" :disabled="checkoutLoading">
+          {{ checkoutLoading ? 'Processing...' : 'Continue to checkout' }}
+        </button>
       </div>
     </div>
   </div>
@@ -97,14 +99,16 @@
   import { useCartStore } from '@/stores/cartStore'
   import { useRouter } from 'vue-router'
   import { formatRupiah } from '@/utils/currency'
+  import { useOrderStore } from '@/stores/orderStore'
 
   const productCategoryStore = useProductCategoryStore()
   const productStore         = useProductStore()
   const authStore            = useAuthStore()
   const router               = useRouter()
   const cartStore            = useCartStore()
-
-  const userObj   = authStore.user ? JSON.parse(authStore.user) : null
+  const orderStore           = useOrderStore()
+  const userObj              = authStore.user ? JSON.parse(authStore.user) : null
+  const checkoutLoading      = ref(false)
 
   onMounted(() => {
     if (authStore.isAuthenticated) {
@@ -123,4 +127,21 @@
     },
     { immediate: false }
   )
+
+  const handleCheckout = async () => {
+    if (cartItems.value.length === 0) {
+      showToast('Keranjang kosong, tidak bisa checkout', 'warning')
+      return
+    }
+
+    checkoutLoading.value = true
+    try {
+      await orderStore.createOrder()
+      await cartStore.fetchCart()
+    } catch (err) {
+      // error sudah ditangani di store
+    } finally {
+      checkoutLoading.value = false
+    }
+  }
 </script>
