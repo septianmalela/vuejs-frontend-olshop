@@ -13,11 +13,11 @@ export const useAuthStore = defineStore('auth', {
   },
   actions: {
     setUserAndToken(user, authorisation) {
-      this.user = user
+      this.user  = JSON.stringify(user)
       this.token = authorisation.token
 
       localStorage.setItem('auth_token', authorisation.token)
-      localStorage.setItem('auth_user', JSON.stringify(user))
+      localStorage.setItem('auth_user', this.user)
 
       api.defaults.headers.common['Authorization'] = `Bearer ${authorisation.token}`
 

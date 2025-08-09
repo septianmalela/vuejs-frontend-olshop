@@ -27,38 +27,70 @@
           </div>
         </form>
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-          <li class="nav-item dropdown">
+          <li v-if="authStore.isAuthenticated" class="nav-item">
+            <a href="javascript:;" class="nav-link" @click.prevent="authStore.logout()">Logout</a>
+          </li>
+          <li v-if="!authStore.isAuthenticated" class="nav-item dropdown">
             <a class="nav-link dropdown-toggle d-flex flex-column align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="min-width: 120px;">
               <div class="d-flex align-items-center">
                 <i class="bi bi-person-fill mx-2"></i>
-                <span>
-                  {{ authStore.isAuthenticated ? `Hi, ${userObj.name}` : 'Hi, Selamat Datang!' }}
-                </span>
+                <span>Hi, Selamat Datang!</span>
               </div>
-              <small>
-                {{ authStore.isAuthenticated ? formatRupiah(totalPrice) : '' }}
-              </small>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
-              <li v-if="!authStore.isAuthenticated">
+              <li>
                 <router-link to="/login" class="dropdown-item">Login</router-link>
               </li>
-              <li v-if="!authStore.isAuthenticated">
+              <li>
                 <router-link to="/register" class="dropdown-item">Register</router-link>
               </li>
-              <li v-if="authStore.isAuthenticated">
-                <a href="javascript:;" class="dropdown-item" @click.prevent="authStore.logout()">Logout</a>
-              </li>
             </ul>
+          </li>
+          <li v-else class="nav-item">
+            <a class="nav-link d-flex flex-column align-items-center" href="#" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart" aria-controls="offcanvasCart" style="min-width: 120px;">
+              <div class="d-flex align-items-center">
+                <i class="bi bi-person-fill mx-2"></i>
+                <span>Hi, {{ userObj.name }}</span>
+              </div>
+              <small>{{ formatRupiah(totalPrice) }}</small>
+            </a>
           </li>
         </ul>
       </div>
     </div>
   </nav>
+
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCart" aria-labelledby="offcanvasCartLabel">
+    <div class="offcanvas-header">
+      <h5 id="offcanvasCartLabel">Your Cart ({{ cartItems.length }})</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div v-if="cartItems.length === 0">
+        <p>Your cart is empty.</p>
+      </div>
+      <div v-else>
+        <div v-for="item in cartItems" :key="item.id" class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+          <div>
+            <strong>{{ item.name }}</strong><br />
+            Qty: {{ item.qty }} x {{ formatRupiah(item.price) }}
+          </div>
+          <div>
+            {{ formatRupiah(item.qty * item.price) }}
+          </div>
+        </div>
+        <div class="d-flex justify-content-between fw-bold">
+          <span>Total:</span>
+          <span>{{ formatRupiah(totalPrice) }}</span>
+        </div>
+        <button class="btn btn-warning w-100 mt-4">Continue to checkout</button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
-  import { onMounted, computed, watch } from 'vue'
+  import { onMounted, computed, watch, ref } from 'vue'
   import { useAuthStore } from '@/stores/authStore'
   import { useProductCategoryStore } from '@/stores/productCategoryStore'
   import { useProductStore } from '@/stores/productStore'
@@ -72,21 +104,17 @@
   const router               = useRouter()
   const cartStore            = useCartStore()
 
-  const userObj = authStore.user ? JSON.parse(authStore.user) : null
+  const userObj   = authStore.user ? JSON.parse(authStore.user) : null
 
   onMounted(() => {
     if (authStore.isAuthenticated) {
       cartStore.fetchCart()
     }
-
     productCategoryStore.fetchProductCategories()
   })
 
-  if (authStore.isAuthenticated) {
-    const totalPrice = computed(() => {
-      return cartStore.cart.total_price
-    })
-  }
+  const cartItems  = computed(() => authStore.isAuthenticated ? cartStore.cart.cart_items : [])
+  const totalPrice = computed(() => authStore.isAuthenticated ? cartStore.cart.total_price : 0)
 
   watch(
     () => [productStore.searchName, productStore.productCategoryId],

@@ -97,9 +97,8 @@ export const useProductStore = defineStore('products', {
         .then((response) => {
           const cartStore = useCartStore()
           cartStore.fetchCart()
-          const totalPrice = computed(() => {
-            return cartStore.cart.total_price
-          })
+          const cartItems  = computed(() => authStore.isAuthenticated ? cartStore.cart.cart_items : [])
+          const totalPrice = computed(() => authStore.isAuthenticated ? cartStore.cart.total_price : 0)
           showToast(`${product.name} berhasil ditambahkan`, 'success')
         })
         .catch(err => {
